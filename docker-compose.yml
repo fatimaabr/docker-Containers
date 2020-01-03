@@ -1,15 +1,28 @@
-
 version: '3'
 
 services:
  
-    php:
-         image: php 
-         container_name: php 
+  web:
+    build: .
+    ports:
+        - 8000:8000
+    volumes:
+        - ./:/app
+    networks:
+      - app-network
 
-         volumes:
-            - ./:/var/www/laravel
-            entrypoint:
-                - php
-                ports:
-                    - 8080:80
+  db:
+    image: mysql
+    environment:
+      - MYSQL_USER=laravel-db-user
+      - MYSQL_PASSWORD=devpassword
+      - MYSQL_DATABASE=laravel-db
+    ports:
+      - 3306:3306
+    networks:
+      - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge

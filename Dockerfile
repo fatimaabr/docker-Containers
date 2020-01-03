@@ -1,16 +1,11 @@
-FROM php
+FROM php:7.2-fpm
+RUN apt-get update -y && apt-get install -y libmcrypt-dev openssl git zip unzip
+# RUN docker-php-ext-install pdo mcrypt mbstring
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN docker-php-ext-install pdo  mbstring
+WORKDIR /app
+COPY . /app
+RUN composer install
 
-RUN apt-get update -y && apt-get install -y nginx
-
-COPY --chown=www-data:www-data . /var/www/laravel
-
-COPY ./docker/default.conf /etc/nginx/sites-enabled/default.conf
-
-COPY entrypoint.sh /etc/entrypoint.sh
-
-
-WORKDIR /var/www/laravel
-
-EXPOSE 80 443
-
-ENTRYPOINT ["/etc/entrypoint.sh"]
+CMD php artisan serve --host=0.0.0.0 --port=8000
+EXPOSE 8000
