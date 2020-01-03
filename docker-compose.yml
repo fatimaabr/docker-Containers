@@ -1,0 +1,15 @@
+
+version: '3'
+
+services:
+ 
+    php:
+         image: php 
+         container_name: php 
+
+         volumes:
+            - ./:/var/www/laravel
+            entrypoint:
+                - php
+                ports:
+                    - 8080:80
